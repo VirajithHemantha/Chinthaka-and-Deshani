@@ -1,0 +1,37 @@
+{
+  "entities": {
+    "RSVP": {
+      "title": "RSVP",
+      "description": "Wedding RSVP response",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "description": "Full name of the guest" },
+        "guests": { "type": "integer", "description": "Number of guests" },
+        "dietaryNotes": { "type": "string", "description": "Any dietary restrictions" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Submission time" }
+      },
+      "required": ["fullName", "guests", "createdAt"]
+    },
+    "Wish": {
+      "title": "Wish",
+      "description": "Wedding blessing/wish from a guest",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Name of the person leaving the wish" },
+        "message": { "type": "string", "description": "The blessing message" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Submission time" }
+      },
+      "required": ["name", "message", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/rsvps/{rsvpId}": {
+      "schema": "RSVP",
+      "description": "Collection of RSVPs"
+    },
+    "/wishes/{wishId}": {
+      "schema": "Wish",
+      "description": "Collection of guest wishes"
+    }
+  }
+}

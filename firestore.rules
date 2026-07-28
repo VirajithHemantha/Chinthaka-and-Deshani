@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isValidRSVP(data) {
+      return data.keys().hasAll(['fullName', 'guests', 'createdAt']) &&
+             data.fullName is string && data.fullName.size() > 0 && data.fullName.size() < 100 &&
+             data.guests is int && data.guests >= 1 && data.guests <= 10 &&
+             data.dietaryNotes is string && data.dietaryNotes.size() < 500 &&
+             data.createdAt is timestamp;
+    }
+    
+    function isValidWish(data) {
+      return data.keys().hasAll(['name', 'message', 'createdAt']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.message is string && data.message.size() > 0 && data.message.size() < 1000 &&
+             data.createdAt is timestamp;
+    }
+
+    match /rsvps/{rsvpId} {
+      // Allow anyone to create an RSVP (public form)
+      allow create: if isValidRSVP(request.resource.data);
+      // Only admin can read RSVPs
+      allow read: if isAuthenticated() && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        request.auth.token.email == "lavanyacheshani5@gmail.com"
+      );
+    }
+
+    match /wishes/{wishId} {
+      // Allow anyone to read wishes (public guestbook)
+      allow read: if true;
+      // Allow anyone to create a wish
+      allow create: if isValidWish(request.resource.data);
+    }
+    
+    match /users/{userId} {
+      allow read: if isAuthenticated() && request.auth.uid == userId;
+    }
+  }
+}
