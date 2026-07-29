@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 const prefixes = [
   "Mr.",
   "Mrs.",
+  "Miss",
   "Mr. & Mrs.",
   "Family",
   "Dear"
@@ -28,7 +29,7 @@ export const AdminPage: React.FC = () => {
   const getFullMessage = () => {
     return `Dear ${prefix} ${name.trim()} ❤️
 
-With joyful hearts, we warmly invite you and your family to celebrate one of the most special days of our lives as we begin our journey together.
+With joyful hearts, we warmly invite you to celebrate one of the most special days of our lives as we begin our journey together.
 
 Please view our wedding invitation and all the event details through the link below 🌐:
 
